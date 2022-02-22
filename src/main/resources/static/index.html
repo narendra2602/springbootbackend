@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+  <!--<script type="text/javascript" src="js/components/jquery/jquery-1.10.2.min.js"></script>
+<script type="text/javascript" src="js/components/jquery-mobile/jquery.mobile-1.4.3.min.js"></script> -->
+
+
+
+  <script>
+    const url = "http://192.168.1.11:8080/api/employees";
+
+	var token = JSON.parse(localStorage.getItem('token'));
+	
+	console.log(token.Authorization);
+	
+	var authToken = token.Authorization;
+
+    
+    
+    function submitForm(event,e1) {
+      alert("in submit form");
+      // Prevent the form from submitting.
+      event.preventDefault();
+      // Set url for submission and collect data.
+      //      url = "http://192.168.1.11:8080/api/employees";
+      //const formData = new FormData(event.target);
+
+      var formData = new FormData(document.querySelector('form'));
+      // Build the data object.
+      const data = {};
+      formData.forEach((value, key) => (data[key] = value));
+      // Log the data.
+      console.log(data);
+      alert(e1.id);
+
+
+
+      var buttonname=e1.id;
+      var type = 'POST';
+      var id = document.getElementById("id").value;
+      alert(buttonname + " " + url + " " + id);
+
+      alert(buttonname == 'update');
+      var xurl = "";
+      if (buttonname == 'update') {
+        alert(buttonname == 'update');
+        type = 'POST';
+        //url+="/"+id;
+        xurl = "/" + id;
+        //url=url+"/"+id;
+        alert("url: " + url + xurl);
+      }
+
+
+
+      $.ajax({
+        type: type,
+        url: url + xurl,
+        headers: {
+            "Content-Type": "application/json; charset=utf-8",
+            "Authorization": authToken
+        },
+        dataType: "json",
+        data: JSON.stringify(data),
+        success: function (data) {
+          if (buttonname == 'update')
+            alert(data.firstName + "  updated successfully");
+          else
+            alert(data.firstName + "  inserted successfully");  
+
+        },
+        error: function (err) {
+          console.log(err);
+
+        }
+      }); //-- END of Ajax
+      console.log('Ends POST');
+
+
+
+    }
+
+
+    function getEmployee() {
+
+      $.ajax({
+        type: 'GET',
+        url: url,
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+            "Authorization": authToken
+        },
+        dataType: "json",
+        success: function (data) {
+          var nData = JSON.stringify(data);
+          fillReportTable(JSON.parse(nData));
+        },
+        error: function (err) {
+          console.log(err);
+
+        }
+      }); //-- END of Ajax
+      console.log('Ends POST');
+
+
+    }
+
+
+    function fillReportTable(data) {
+
+
+      $("#tbody").empty();
+      //var nData = JSON.stringify(data);
+      $.each(data, function (idx, obj) {
+        var eachrow;
+        eachrow = "<tr style='font-weight: bold;'>"
+          + '<td>' + obj.id + '</td>'
+          + '<td>' + obj.firstName + '</td>'
+          + '<td>' + obj.lastName + '</td>'
+          + '<td>' + obj.email + '</td>'
+          + "</tr>";
+
+
+        $('#tbody').append(eachrow);
+      });
+
+    }
+
+    function getEmployeeId() {
+      var id = document.getElementById("id").value;
+
+      $.ajax({
+        type: 'GET',
+        url: url + "/" + id,
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+            "Authorization": authToken
+        },
+        dataType: "json",
+        success: function (data) {
+          var nData = JSON.stringify(data);
+          alert(nData);
+          fillReportTableId(JSON.parse(nData));
+        },
+        error: function (err) {
+          console.log(err);
+
+        }
+      }); //-- END of Ajax
+      console.log('Ends POST');
+
+    }
+
+    function fillReportTableId(data) {
+
+      document.getElementById("firstName").value = data.firstName;
+      document.getElementById("lastName").value = data.lastName;
+      document.getElementById("email").value = data.email;
+
+
+    }
+
+
+
+  </script>
+</head>
+
+<body>
+
+  <h2>HTML Forms</h2>
+
+  <form >
+    <label for="fname">First name:</label><br>
+    <input type="text" id="firstName" name="firstName" value="John"><br>
+    <label for="lname">Last name:</label><br>
+    <input type="text" id="lastName" name="lastName" value="Doe"><br>
+    <label for="email">Email:</label><br>
+    <input type="text" id="email" name="email" value="john@gmail.com"><br><br>
+    <input type="submit" id="submit" value="Submit" onclick="submitForm(event,this)" >
+    <input type="submit" id="update" value="Update" onclick="submitForm(event,this)">
+    
+  </form>
+
+  <br />
+  <div>
+    <input type="submit" value="Get All Employee" onclick="getEmployee()">
+  </div>
+
+  <div>
+    <table id="employee">
+
+      <thead>
+
+        <tr id="tableDataHeader">
+          <th>Id</th>
+          <th>First Name</th>
+          <th>Last Name</th>
+          <th>Email</th>
+
+
+        </tr>
+      </thead>
+
+      <tbody id="tbody">
+
+      </tbody>
+
+
+    </table>
+  </div>
+
+
+  <div>
+    <label for="id">Search by Id:</label>
+    <input type="text" id="id" name="id">
+    <input type="submit" value="Get Employee by Id" onclick="getEmployeeId()">
+  </div>
+
+
+</body>
+
+</html>

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+  <!--<script type="text/javascript" src="js/components/jquery/jquery-1.10.2.min.js"></script>
+<script type="text/javascript" src="js/components/jquery-mobile/jquery.mobile-1.4.3.min.js"></script> -->
+
+
+
+  <script>
+    const url = "http://localhost:8080/api/user/login";
+
+
+    function submitForm(event) {
+      alert("in submit form");
+      // Prevent the form from submitting.
+      event.preventDefault();
+      // Set url for submission and collect data.
+      //      url = "http://192.168.1.11:8080/api/employees";
+      //const formData = new FormData(event.target);
+
+      var formData = new FormData(document.querySelector('form'));
+      // Build the data object.
+      const data = {};
+      formData.forEach((value, key) => (data[key] = value));
+      // Log the data.
+      console.log(data);
+      
+
+
+
+     
+      var type = 'POST';
+      
+      alert(url);
+
+
+
+
+      $.ajax({
+        type: type,
+        url: url,
+        contentType: "application/x-www-form-urlencoded",
+        dataType: "json",
+        data: JSON.stringify(data),
+        success: function (data) {
+            alert(JSON.stringify(data));
+		    console.log(data);
+			localStorage.setItem("token", JSON.stringify(data));
+
+        },
+        error: function (err) {
+          console.log(err);
+
+        }
+      }); //-- END of Ajax
+      console.log('Ends POST');
+
+
+
+    }
+
+
+
+    
+
+
+
+  </script>
+</head>
+
+<body>
+
+  <h2>HTML Forms</h2>
+
+  <form >
+    <label for="fname">User name:</label><br>
+    <input type="text" id="username" name="username" ><br>
+    <label for="lname">Password:</label><br>
+    <input type="password" id="password" name="password" ><br>
+    <input type="submit" id="submit" value="Login" onclick="submitForm(event)" >
+    
+  </form>
+
+
+</body>
+
+</html>
