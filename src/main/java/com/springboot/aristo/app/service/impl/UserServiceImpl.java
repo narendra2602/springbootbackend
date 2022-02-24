@@ -9,8 +9,11 @@ import javax.persistence.EntityNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.springboot.aristo.app.dao.UserMappingRepository;
 import com.springboot.aristo.app.dao.UserRepository;
 import com.springboot.aristo.app.dto.ApiUser;
+import com.springboot.aristo.app.dto.RoleCombo;
+import com.springboot.aristo.app.dto.UserMapping;
 import com.springboot.aristo.app.dto.request.UserCreateRequest;
 import com.springboot.aristo.app.service.UserService;
 
@@ -21,6 +24,7 @@ import lombok.RequiredArgsConstructor;
 public class UserServiceImpl implements UserService{
 
     private final UserRepository userRepository;
+    private final UserMappingRepository userMappingRepository;
     private final BCryptPasswordEncoder passwordEncoder;
    
     @Override
@@ -46,6 +50,21 @@ public class UserServiceImpl implements UserService{
         apiUser.setCity(userCreateRequest.getCity());
         apiUser.setState(userCreateRequest.getState());
         apiUser.setEnabled(true);
+        
+        UserMapping user =new UserMapping();
+        
+        user.setRole(userCreateRequest.getRole());
+        user.setName(userCreateRequest.getName());
+        user.setHocode(userCreateRequest.getHo_code());
+        user.setCfcode(userCreateRequest.getCf_code());
+        user.setFscode(userCreateRequest.getFs_code());
+        user.setStkcode(userCreateRequest.getStk_code());
+        user.setStatus(true);
+        
+        apiUser.setUsermapping(user);
+        
+        user.setUser(apiUser);
+        
         userRepository.save(apiUser);
     }
     
@@ -62,4 +81,18 @@ public class UserServiceImpl implements UserService{
 		Optional<ApiUser> user = userRepository.findById(id);
 		return user.get();
 	}
+	
+	@Override
+	public List<RoleCombo> getAllRole(Long state_code, String role) {
+		// TODO Auto-generated method stub
+		return userRepository.getAllRole(state_code, role);
+	}
+
+
+	@Override
+	public boolean existsCode(String code) {
+		// TODO Auto-generated method stub
+		return userMappingRepository.existsByCfcodeOrFscodeOrStkcode(code, code, code);
+	}
+
 }

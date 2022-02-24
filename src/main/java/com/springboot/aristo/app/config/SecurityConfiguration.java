@@ -18,6 +18,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import com.springboot.aristo.app.dto.ApiUser;
 import com.springboot.aristo.app.filter.JWTAuthenticationFilter;
 import com.springboot.aristo.app.filter.JWTAuthorizationFilter;
 import com.springboot.aristo.app.service.impl.AuthenticationUserDetailService;

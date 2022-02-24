@@ -21,4 +21,6 @@ public interface OrderFstDao extends JpaRepository<OrderFst, Long> {
 	@Query(value="CALL getOrder(:id_in);", nativeQuery=true)
 	List<OrderProductDetail> getOrder(@Param("id_in") Long id) ;
 	
+
+	
 }

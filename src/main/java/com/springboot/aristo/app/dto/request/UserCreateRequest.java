@@ -10,4 +10,11 @@ public class UserCreateRequest {
     private long phone;
     private String city;
     private int state;
+	private String name;
+	private String ho_code;
+	private String cf_code;
+	private String fs_code;
+	private String stk_code;
+	
+
 }

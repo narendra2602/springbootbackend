@@ -1,9 +1,14 @@
 package com.springboot.aristo.app.dto;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
+import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,5 +32,10 @@ public class ApiUser {
     private String city;
     private int state;
     private boolean enabled; 
+    
+    @OneToOne(mappedBy="user",cascade=CascadeType.ALL)
+    @PrimaryKeyJoinColumn
+    @JsonManagedReference
+    private UserMapping usermapping;
 
 }

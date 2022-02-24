@@ -80,6 +80,9 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             		"\"user\":\"" +userDetails.getUsername()+"\","+
             		"\"email\":\"" +userDetails.getEmail()+"\","+
             		"\"id\":\"" +userDetails.getId()+"\","+
+            		"\"cfcode\":\"" +userDetails.getUserMapping().getCfcode()+"\","+
+            		"\"fscode\":\"" +userDetails.getUserMapping().getFscode()+"\","+
+            		"\"stkcode\":\"" +userDetails.getUserMapping().getStkcode()+"\","+
             		"\"role\":\"" +auth.getAuthorities().iterator().next().getAuthority()+"\"}"
         );
         

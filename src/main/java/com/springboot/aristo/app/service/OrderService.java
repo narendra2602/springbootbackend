@@ -13,4 +13,5 @@ public interface OrderService {
 		List<OrderFst> getAllOrders(String stkid);
 		List<OrderFst> getAllCFOrders(String cfid);
 		List<OrderProductDetail> getOrder(Long order_no);
+	
 }

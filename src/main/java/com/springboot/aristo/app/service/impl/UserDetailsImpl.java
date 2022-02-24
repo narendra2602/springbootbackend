@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.springboot.aristo.app.dto.ApiUser;
+import com.springboot.aristo.app.dto.UserMapping;
 public class UserDetailsImpl implements UserDetails {
 	private static final long serialVersionUID = 1L;
 	private Long id;
@@ -18,13 +19,15 @@ public class UserDetailsImpl implements UserDetails {
 	@JsonIgnore
 	private String password;
 	private Collection<? extends GrantedAuthority> authorities;
+	private UserMapping userMapping;
 	public UserDetailsImpl(Long id, String username, String email, String password,
-			Collection<? extends GrantedAuthority> authorities) {
+			Collection<? extends GrantedAuthority> authorities,UserMapping userMapping) {
 		this.id = id;
 		this.username = username;
 		this.email = email;
 		this.password = password;
 		this.authorities = authorities;
+		this.userMapping=userMapping;
 	}
 	public static UserDetailsImpl build(ApiUser user) {
 		List<GrantedAuthority> authorities = Arrays.asList(new SimpleGrantedAuthority(user.getRole()));
@@ -34,7 +37,8 @@ public class UserDetailsImpl implements UserDetails {
 				user.getUsername(), 
 				user.getEmail(),
 				user.getPassword(), 
-				authorities);
+				authorities,
+				user.getUsermapping());
 	}
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -46,6 +50,11 @@ public class UserDetailsImpl implements UserDetails {
 	public String getEmail() {
 		return email;
 	}
+	public UserMapping getUserMapping() {
+		return userMapping;
+	}
+
+	
 	@Override
 	public String getPassword() {
 		return password;
@@ -54,6 +63,7 @@ public class UserDetailsImpl implements UserDetails {
 	public String getUsername() {
 		return username;
 	}
+	
 	@Override
 	public boolean isAccountNonExpired() {
 		return true;
