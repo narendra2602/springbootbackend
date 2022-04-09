@@ -13,6 +13,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import org.springframework.mail.javamail.JavaMailSender;
+
+import javax.mail.internet.MimeMessage;
+import org.springframework.mail.javamail.MimeMessageHelper;
+
+import com.springboot.aristo.app.dto.OrderDetail;
 import com.springboot.aristo.app.dto.OrderFst;
 import com.springboot.aristo.app.dto.OrderProductDetail;
 import com.springboot.aristo.app.service.OrderService;
@@ -24,7 +30,8 @@ public class OrderController {
 
 		@Autowired
 		private OrderService orderService;
-		
+		@Autowired
+	    private JavaMailSender sender;
 
 		@PostMapping
 		public ResponseEntity<OrderFst> saveorder(@RequestBody OrderFst order)
@@ -46,11 +53,34 @@ public class OrderController {
 		    	 order.getItems().add(i, s);
 		    }
 */		    
-			return new ResponseEntity<>(orderService.saveOrder(order), HttpStatus.OK);
+			OrderFst orderSubmit = orderService.saveOrder(order);
+			if(orderSubmit.getId()>0)
+			{
+				try {
+		            sendEmail(orderSubmit.getId());
+		            
+		        }catch(Exception ex) {
+		            ex.printStackTrace();
+		        }
+			}
+			return new ResponseEntity<>(orderSubmit, HttpStatus.OK);
 					
 		}
 
 		
+		private void sendEmail(long orderNo) throws Exception{
+	        MimeMessage message = sender.createMimeMessage();
+	        MimeMessageHelper helper = new MimeMessageHelper(message);
+	         
+	        helper.setTo("narendra2602@gmail.com");
+	        helper.setText(
+                    "Dear Narendra"
+                        + ", thank you for placing order. Your order number is "
+                        + orderNo);
+	        helper.setSubject("Your order has been placed successfully");
+	         
+	        sender.send(message);
+	    }
 	
 		@GetMapping("{id}")
 		public ResponseEntity<OrderFst> getOrder(@PathVariable("id") Long id)
@@ -61,23 +91,23 @@ public class OrderController {
 		}
 		
 		@GetMapping
-		public ResponseEntity<List<OrderFst>> getAllOrders()
+		public ResponseEntity<List<OrderDetail>> getAllOrders()
 		{
-			return new ResponseEntity<List<OrderFst>>(orderService.getAllOrders(), HttpStatus.OK);
+			return new ResponseEntity<List<OrderDetail>>(orderService.getAllOrders(), HttpStatus.OK);
 			
 		}
 		
 		@GetMapping("/stockiest/{stkid}")
-		public ResponseEntity<List<OrderFst>> getAllOrdersStockiest(@PathVariable("stkid") String stkid)
+		public ResponseEntity<List<OrderDetail>> getAllOrdersStockiest(@PathVariable("stkid") String stkid)
 		{
-			return new ResponseEntity<List<OrderFst>>(orderService.getAllOrders(stkid), HttpStatus.OK);
+			return new ResponseEntity<List<OrderDetail>>(orderService.getAllOrders(stkid), HttpStatus.OK);
 			
 		}
 
 		@GetMapping("/cf/{cfid}")
-		public ResponseEntity<List<OrderFst>> getAllOrdersCF(@PathVariable("cfid") String cfid)
+		public ResponseEntity<List<OrderDetail>> getAllOrdersCF(@PathVariable("cfid") String cfid)
 		{
-			return new ResponseEntity<List<OrderFst>>(orderService.getAllCFOrders(cfid), HttpStatus.OK);
+			return new ResponseEntity<List<OrderDetail>>(orderService.getAllCFOrders(cfid), HttpStatus.OK);
 			
 		}
 

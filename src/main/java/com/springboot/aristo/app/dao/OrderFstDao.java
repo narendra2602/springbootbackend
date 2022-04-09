@@ -6,8 +6,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import com.springboot.aristo.app.dto.OrderDetail;
 import com.springboot.aristo.app.dto.OrderFst;
 import com.springboot.aristo.app.dto.OrderProductDetail;
+
 
 
 public interface OrderFstDao extends JpaRepository<OrderFst, Long> {
@@ -22,5 +24,7 @@ public interface OrderFstDao extends JpaRepository<OrderFst, Long> {
 	List<OrderProductDetail> getOrder(@Param("id_in") Long id) ;
 	
 
+	@Query(value="CALL getOrderList(:role_in,:code_in);", nativeQuery=true)
+	List<OrderDetail> getOrderList(@Param("role_in") String role,@Param("code_in") String code);
 	
 }

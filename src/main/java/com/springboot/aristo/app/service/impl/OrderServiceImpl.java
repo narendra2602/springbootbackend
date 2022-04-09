@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.springboot.aristo.app.dao.OrderFstDao;
+import com.springboot.aristo.app.dto.OrderDetail;
 import com.springboot.aristo.app.dto.OrderFst;
 import com.springboot.aristo.app.dto.OrderProductDetail;
 import com.springboot.aristo.app.service.OrderService;
@@ -31,21 +32,24 @@ public class OrderServiceImpl implements OrderService {
 	}
 
 	@Override
-	public List<OrderFst> getAllOrders() {
+	public List<OrderDetail> getAllOrders() {
 		// TODO Auto-generated method stub
-		return orderFstDao.findAll();
+		//return orderFstDao.findAll();
+		return orderFstDao.getOrderList("Admin","0");
 	}
 
 	@Override
-	public List<OrderFst> getAllOrders(String stkid) {
+	public List<OrderDetail> getAllOrders(String stkid) {
 		// TODO Auto-generated method stub
-		return orderFstDao.findByStkCode(stkid);
+		//return orderFstDao.findByStkCode(stkid);
+		return orderFstDao.getOrderList("Stockiest",stkid);
 	}
 
 	@Override
-	public List<OrderFst> getAllCFOrders(String cfid) {
+	public List<OrderDetail> getAllCFOrders(String cfid) {
 		// TODO Auto-generated method stub
-		return orderFstDao.findByCfCodeOrderByOrderDate(cfid);
+		//return orderFstDao.findByCfCodeOrderByOrderDate(cfid);
+		return orderFstDao.getOrderList("CF",cfid);
 	}
 
 	@Override
